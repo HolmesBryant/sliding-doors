@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Web Component: Sliding Doors Effect</title>
+	<script defer type="module" src="sliding-doors.js"></script>
+	<script defer type="module" src="rad-grad02.js"></script>
+	<link rel="stylesheet" href="styles.css">
+	<style>
+		sliding-doors {
+			height:275px;
+			width: 100%;
+		}
+
+		sliding-doors .content {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			min-height: 300px;
+		}
+
+		@layer custom-theme {
+			sliding-doors.custom-theme {
+				--tintOuter: hsl(300, 76.056%, 72.157%);
+				--tintMiddle: blue 50%;
+				--tintInner: hsl(274.62, 100%, 18.75%) 70%;
+			}
+		} /* @custom-theme */
+
+		@layer basic-gradient {
+			.basic-gradient {
+				background-image: linear-gradient(
+			    	45deg,
+			    	magenta,
+			    	rebeccapurple,
+			    	dodgerblue,
+			    	green
+			  	);
+			}
+		} /* @basic-gradient */
+
+		@layer animated-icon {
+			@keyframes rotateIcon {
+				0% { transform: rotate(0deg); }
+				100% { transform: rotate(360deg); }
+			}
+
+			svg { animation: rotateIcon 1.5s infinite linear; }
+			svg circle, svg line { stroke: lime; }
+		} /* @animated-icon*/
+	</style>
+</head>
+<body>
+	<details>
+		<summary><h1>Sliding Doors Web Component</h1></summary>
+		<p>This component creates a sliding door effect to reveal or hide some content. It provides three stock themes, "default", "light" and "dark". You may also define your own custom theme by setting some css variables. You may set these variables on "sliding-doors" in a css stylesheet.</p>
+
+		<blockquote>
+		<pre>
+			sliding-doors {
+				--tintOuter: red;
+				--tintMiddle: green;
+				--tintInner: blue;
+			}
+		</pre>
+		</blockquote>
+
+		<p>Or you may set the variables in the "style" attribute of the custom element itself. Don't forget to add the double hyphons (--).</p>
+
+		<blockquote><code>
+			&lt;sliding-doors style="--tintInner:red;--tintMiddle:green;--tintOuter:blue">&lt;/sliding-doors>
+		</code></blockquote>
+
+		<p>You can also include an image, gradient, SVG icon or any DOM element as an overlay on top of the doors. In order to do this, you must add an element having the attribute <code>[slot="effect"]</code>.</p>
+
+		<blockquote>
+		<pre>
+			&lt;sliding-doors>
+				&lt;p>Some content behind the doors&lt;/p>
+				&lt;div slot="effect" class="gradient">&lt;/div>
+			&lt;/sliding-doors>
+		</pre>
+		</blockquote>
+
+		<p>The component exposes three custom attributes: "active", "speed" and "theme" which will be described below. You may add one or more of these attributes to the component like this:
+		</p>
+
+		<blockquote>
+			<code>&lt;sliding-doors active speed="1" theme="light">...&lt;/sliding-doors></code>
+		</blockquote>
+
+		<h2>Attributes</h2>
+		<div>
+			<ul>
+				<li><b>active (default: "true")</b> Acceptable values: ["true", "false", null]. The doors are closed when the "active" attribute is present. This attribute may have no value or may have any value other than "false". The doors are open when active is "false" or the attribute is removed. By default, the doors are open on initialization. If you would like to initialize the component with the doors closed, add this attribute to the HTML tag</li>
+
+				<li><b>speed (default: ".5s")</b> Acceptable values: [any valid css time value]. The speed at which the doors open and close. ".5s" means half a second. "1000ms" means 1000 milliseconds. If you just use a number with no measurement, such as "3", it will be interpreted as seconds.</li>
+				<li><b>theme (default: "default")</b> Acceptable values: [null, "default", "light", "dark"]. The gradient on the doors is composed of three color stops. "Theme" refers to the colors applied to these stops. The component includes three themes: "default", "light" and "dark".</li>
+			</ul>
+		</div>
+	</details>
+	<aside>
+		<h2>Demo</h2>
+		<div id="settings">
+			<form id="settings" method="dialog">
+				<fieldset>
+					<legend>speed</legend>
+					<select onchange="change(event, 'speed')">
+						<option value=".5s">Default (.5s)</option>
+						<option>0</option>
+						<option>1</option>
+						<option>3</option>
+						<option>5s</option>
+						<option>100ms</option>
+						<option>300ms</option>
+					</select>
+				</fieldset>
+
+				<fieldset>
+					<legend>theme</legend>
+					<label>
+					<input checked type="radio" name="theme" value="" onchange="change(event, 'theme')"> null (default)
+					</label>
+					<label>
+					<input type="radio" name="theme" value="light" onchange="change(event, 'theme')"> light
+					</label>
+					<label>
+					<input type="radio" name="theme" value="dark" onchange="change(event, 'theme')"> dark
+					</label>
+				</fieldset>
+
+				<fieldset>
+					<legend>style</legend>
+					<label>
+					<input type="color" name="tintOuter" onchange="change(event, 'tintOuter')"> --tintOuter
+					</label>
+					<label>
+					<input type="color" name="tintMiddle" onchange="change(event, 'tintMiddle')"> --tintMiddle
+					</label>
+					<label>
+					<input type="color" name="tintInner" onchange="change(event, 'tintInner')"> --tintInner
+					</label>
+				</fieldset>
+			</form>
+		</div>
+	</aside>
+
+	<section>
+		<article>
+			<h3>Basic</h3>
+			<figure>
+				<sliding-doors active id="basic">
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</sliding-doors>
+				<figcaption>
+					<button data-target="#basic" onclick="openDoors(event)">Open</button>
+					<button data-target="#basic" onclick="closeDoors(event)">Close</button>
+				</figcaption>
+			</figure>
+		</article>
+
+		<article>
+			<h3>Activate on Form Submission</h3>
+			<sliding-doors>
+				<form id="example" onsubmit="closeDoors(event)">
+					<label>
+						Foo<br>
+						<input name="foo" value="">
+					</label>
+					<label>
+						Bar<br>
+						<input name="bar" value="">
+					</label>
+					<label>
+						Baz<br>
+						<input name="baz" value="">
+					</label>
+					<p><button type="submit">Submit</button></p>
+				</form>
+
+				<button slot="effect" style="box-shadow:inset 2px 2px 5px gray">Submitting form.<br>Please wait...</button>
+			</sliding-doors>
+		</article>
+
+		<article>
+			<h3>With Gradient</h3>
+			<figure>
+				<sliding-doors active id="basic-radial">
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<div slot="effect" class="basic-gradient"></div>
+				</sliding-doors>
+				<figcaption>
+					<button data-target="#basic-radial" onclick="openDoors(event)">Open</button>
+					<button data-target="#basic-radial" onclick="closeDoors(event)">Close</button>
+				</figcaption>
+			</figure>
+		</article>
+
+		<article>
+			<h3>With Complex Gradient</h3>
+			<figure>
+				<sliding-doors id="rad-grad" active >
+					<div class="content">
+						<rad-grad02 style="height:600px"></rad-grad02>
+					</div>
+					<rad-grad02 slot="effect"></rad-grad02>
+				</sliding-doors>
+				<figcaption>
+					<button data-target="#rad-grad" onclick="closeDoors(event)">
+						Close
+					</button>
+					<button data-target="#rad-grad" onclick="openDoors(event)">
+						Open
+					</button>
+				</figcaption>
+			</figure>
+		</article>
+
+		<article>
+			<h3>With SVG Icon</h3>
+			<figure>
+				<sliding-doors id="ani-icon" active >
+					<div class="content">
+						<h1>Foo!</h1>
+					</div>
+					<svg slot="effect" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+						<circle cx="12" cy="12" r="10" stroke-width="3" fill="none" />
+						<line x1="12" y1="2" x2="12" y2="6" stroke-width="3" />
+						<line x1="12" y1="18" x2="12" y2="22" stroke-width="3" />
+						<line x1="4.93" y1="4.93" x2="7.76" y2="7.76" stroke-width="3" />
+						<line x1="16.24" y1="16.24" x2="19.07" y2="19.07" stroke-width="3" />
+					</svg>
+				</sliding-doors>
+				<figcaption>
+					<button data-target="#ani-icon" onclick="closeDoors(event)">
+						Close
+					</button>
+					<button data-target="#ani-icon" onclick="openDoors(event)">
+						Open
+					</button>
+				</figcaption>
+			</figure>
+		</article>
+	</section>
+
+	<script>
+		const elems = document.querySelectorAll ('sliding-doors');
+		const form = document.querySelector('form#settings');
+
+		function getElement (event) {
+			let elem;
+			const target = event.target.getAttribute ('data-target') || false;
+
+			if (target) {
+				elem = document.querySelector (target);
+			} else {
+				elem = event.target.closest ('sliding-doors');
+			}
+
+			return elem;
+		}
+
+		function closeDoors (event) {
+			event.preventDefault();
+			const elem = getElement(event);
+			elem.setAttribute ('active', '');
+
+			// This is just to simulate submitting a form and waiting for a response. Do not include this on your page.
+			if (event.type === 'submit') {
+				let delay;
+				const speed = elem.speed.match(/([\d.]+)([\w]+)/);
+				switch (speed[2]) {
+				case 'ms':
+					delay = speed[1] + 2000;
+					break;
+				default:
+					delay = speed[1] * 1000 + 2000;
+					break;
+				}
+
+				setTimeout (() => {
+					event.target.reset();
+					event.target.elements[0].focus();
+					openDoors(event);
+				}, delay);
+			}
+		}
+
+		function openDoors (event) {
+			event.preventDefault();
+			getElement(event).removeAttribute ('active');
+		}
+
+		function change (event, attr) {
+			const value = event.target.value;
+			for (const elem of elems) {
+				switch (attr) {
+				case 'tintOuter':
+				case 'tintMiddle':
+				case 'tintInner':
+					for (const t of form.theme) {
+						t.checked = false;
+					}
+					event.target.select();
+					elem.style.setProperty(`--${attr}`, value);
+					break;
+				case 'theme':
+					form.tintOuter.value = null;
+					form.tintMiddle.value = null;
+					form.tintInner.value = null;
+				default:
+					elem.setAttribute(attr, value)
+					break;
+				}
+			}
+		}
+	</script>
+</body>
+</html>
