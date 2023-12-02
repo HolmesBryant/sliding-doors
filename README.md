@@ -1,6 +1,10 @@
 # Sliding Doors Web Component #
 
-This component creates a sliding door effect to reveal or hide some content. It provides three stock themes, "default", "light" and "dark". You may also define your own custom theme by setting some css variables. You may set these variables on "sliding-doors" in a css stylesheet.
+This component creates a sliding door effect to reveal or hide some content.
+
+Demo: https://holmesbryant.github.io/sliding-doors/
+
+It provides three stock themes, "default", "light" and "dark". You may also define your own custom theme by setting some css variables. You may set these variables on "sliding-doors" in a css stylesheet.
 
     sliding-doors {
       --tintOuter: red;
@@ -26,7 +30,7 @@ The component exposes three custom attributes: "active", "speed" and "theme" whi
 
 ## Attributes ##
 
-- <b>active (default: "true")</b> Acceptable values: ["true", "false", null]. The doors are closed when the "active" attribute is present. This attribute may have no value or may have any value other than "false". The doors are open when active is "false" or the attribute is removed. By default, the doors are open (false) on initialization. This means that you will not see any effect whatsoever. If you would like to initialize the component with the doors closed, add this attribute, ie. <sliding-doors active>...</sliding-doors>.
+- <b>active (default: "true")</b> Acceptable values: ["true", "false", null]. The doors are closed when the "active" attribute is present. This attribute may have no value or may have any value other than "false". The doors are open when active is "false" or the attribute is removed. By default, the doors are open (false) on initialization. This means that you will not see any effect whatsoever. If you would like to initialize the component with the doors closed, add this attribute.
 
 - <b>speed (default: ".5s")</b> Acceptable values: [any valid css time value]. The speed at which the doors open and close. ".5s" means half a second. "1000ms" means 1000 milliseconds. If you just use a number with no measurement, such as "3", it will be interpreted as seconds.
 
@@ -34,15 +38,15 @@ The component exposes three custom attributes: "active", "speed" and "theme" whi
 
 ## Usage ##
 
-  <html>
-    <head>
-      <script defer type="module" src="sliding-doors.js"></script>
-    </head>
-    <body>
-      <sliding-doors active>
-        <p>Some content...</p>
-        <div slot="effect">This can be any valid DOM or SVG element</div>
-      </sliding-doors>
-    </body>
-  </html>
+    <html>
+      <head>
+        <script defer type="module" src="sliding-doors.js"></script>
+      </head>
+      <body>
+        <sliding-doors active>
+          <p>Some content...</p>
+          <div slot="effect">This can be any valid DOM or SVG element</div>
+        </sliding-doors>
+      </body>
+    </html>
 
