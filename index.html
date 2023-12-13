@@ -72,13 +72,13 @@
 			&lt;sliding-doors style="--tintInner:red;--tintMiddle:green;--tintOuter:blue">&lt;/sliding-doors>
 		</code></blockquote>
 
-		<p>You can also include an image, gradient, SVG icon or any DOM element as an overlay on top of the doors. In order to do this, you must add an element having the attribute <code>[slot="effect"]</code>.</p>
+		<p>You can also include any image, SVG, custom element or standard DOM element as an overlay on top of the doors. Any css rules applied to the element, including css animations, will be preserved. In order to do this, you must add an element having the attribute <code>[slot="effect"]</code>.</p>
 
 		<blockquote>
 		<pre>
 			&lt;sliding-doors>
 				&lt;p>Some content behind the doors&lt;/p>
-				&lt;div slot="effect" class="gradient">&lt;/div>
+				&lt;div slot="effect" class="animated-icon">&lt;/div>
 			&lt;/sliding-doors>
 		</pre>
 		</blockquote>
@@ -96,7 +96,7 @@
 				<li><b>active (default: "true")</b> Acceptable values: ["true", "false", null]. The doors are closed when the "active" attribute is present. This attribute may have no value or may have any value other than "false". The doors are open when active is "false" or the attribute is removed. By default, the doors are open on initialization. If you would like to initialize the component with the doors closed, add this attribute to the HTML tag</li>
 
 				<li><b>speed (default: ".5s")</b> Acceptable values: [any valid css time value]. The speed at which the doors open and close. ".5s" means half a second. "1000ms" means 1000 milliseconds. If you just use a number with no measurement, such as "3", it will be interpreted as seconds.</li>
-				<li><b>theme (default: "default")</b> Acceptable values: [null, "default", "light", "dark"]. The gradient on the doors is composed of three color stops. "Theme" refers to the colors applied to these stops. The component includes three themes: "default", "light" and "dark".</li>
+				<li><b>theme (default: "default")</b> Acceptable values: ["default", "light", "dark", "auto"]. The gradient on the doors is composed of three color stops. "Theme" refers to the colors applied to these stops. The component includes three themes: "default", "light" and "dark". "auto" will automatically choose "dark" if [prefers-color-scheme] in the client is set to "dark"; otherwise it will choose "light".</li>
 			</ul>
 		</div>
 	</details>

@@ -1,7 +1,7 @@
 export default class SlidingDoors extends HTMLElement {
 	#active = false;
 	#speed = '.5s';
-	#theme = 'light';
+	#theme = 'auto';
 	container;
 	themes = {
 		default: {
@@ -18,7 +18,8 @@ export default class SlidingDoors extends HTMLElement {
 			tintOuter: 'rgb(40,40,40)',
 			tintMiddle: 'rgb(70,70,70) 40%',
 			tintInner: 'dimgray 90%'
-		}
+		},
+		auto: {}
 	};
 	wrapper;
 	static observedAttributes = ['active', 'speed', 'theme'];
@@ -236,8 +237,24 @@ export default class SlidingDoors extends HTMLElement {
 
 	get theme () { return this.#theme; }
 	set theme (value) {
+		switch (value) {
+		case 'auto':
+			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				value = 'dark';
+			} else {
+				value = 'light';
+			}
+			break;
+		case 'light':
+		case 'dark':
+			break;
+		default:
+			value = 'default';
+			break;
+		}
+
 		this.#theme = value;
-		const theme = this.themes[value] || this.themes['default'];
+		const theme = this.themes[value];
 		if (theme) {
 			this.tintOuter = theme.tintOuter;
 			this.tintMiddle = theme.tintMiddle;
