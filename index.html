@@ -4,8 +4,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Web Component: Sliding Doors Effect</title>
-	<script defer type="module" src="sliding-doors.js"></script>
-	<script defer type="module" src="rad-grad02.js"></script>
+	<script type="module" src="src/sliding-doors.js"></script>
+	<script type="module" src="extra/wijit-code.js"></script>
 	<link rel="stylesheet" href="styles.css">
 	<style>
 		sliding-doors {
@@ -46,7 +46,7 @@
 				100% { transform: rotate(360deg); }
 			}
 
-			svg { animation: rotateIcon 1.5s infinite linear; }
+			svg.animate { animation: rotateIcon 1.5s infinite linear; }
 			svg circle, svg line { stroke: lime; }
 		} /* @animated-icon*/
 	</style>
@@ -100,51 +100,48 @@
 			</ul>
 		</div>
 	</details>
-	<aside>
-		<h2>Demo</h2>
-		<div id="settings">
-			<form id="settings" method="dialog">
-				<fieldset>
-					<legend>speed</legend>
-					<select onchange="change(event, 'speed')">
-						<option value=".5s">Default (.5s)</option>
-						<option>0</option>
-						<option>1</option>
-						<option>3</option>
-						<option>5s</option>
-						<option>100ms</option>
-						<option>300ms</option>
-					</select>
-				</fieldset>
+	<div id="settings">
+		<form id="settings" method="dialog">
+			<fieldset>
+				<legend>speed</legend>
+				<select onchange="change(event, 'speed')">
+					<option value=".5s">Default (.5s)</option>
+					<option>0</option>
+					<option>1</option>
+					<option>3</option>
+					<option>5s</option>
+					<option>100ms</option>
+					<option>300ms</option>
+				</select>
+			</fieldset>
 
-				<fieldset>
-					<legend>theme</legend>
-					<label>
-					<input checked type="radio" name="theme" value="" onchange="change(event, 'theme')"> null (default)
-					</label>
-					<label>
-					<input type="radio" name="theme" value="light" onchange="change(event, 'theme')"> light
-					</label>
-					<label>
-					<input type="radio" name="theme" value="dark" onchange="change(event, 'theme')"> dark
-					</label>
-				</fieldset>
+			<fieldset>
+				<legend>theme</legend>
+				<label>
+				<input checked type="radio" name="theme" value="" onchange="change(event, 'theme')"> null (default)
+				</label>
+				<label>
+				<input type="radio" name="theme" value="light" onchange="change(event, 'theme')"> light
+				</label>
+				<label>
+				<input type="radio" name="theme" value="dark" onchange="change(event, 'theme')"> dark
+				</label>
+			</fieldset>
 
-				<fieldset>
-					<legend>style</legend>
-					<label>
-					<input type="color" name="tintOuter" onchange="change(event, 'tintOuter')"> --tintOuter
-					</label>
-					<label>
-					<input type="color" name="tintMiddle" onchange="change(event, 'tintMiddle')"> --tintMiddle
-					</label>
-					<label>
-					<input type="color" name="tintInner" onchange="change(event, 'tintInner')"> --tintInner
-					</label>
-				</fieldset>
-			</form>
-		</div>
-	</aside>
+			<fieldset>
+				<legend>style</legend>
+				<label>
+				<input type="color" name="tintOuter" onchange="change(event, 'tintOuter')"> --tintOuter
+				</label>
+				<label>
+				<input type="color" name="tintMiddle" onchange="change(event, 'tintMiddle')"> --tintMiddle
+				</label>
+				<label>
+				<input type="color" name="tintInner" onchange="change(event, 'tintInner')"> --tintInner
+				</label>
+			</fieldset>
+		</form>
+	</div>
 
 	<section>
 		<article>
@@ -159,16 +156,23 @@
 					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 				</sliding-doors>
 				<figcaption>
-					<button data-target="#basic" onclick="openDoors(event)">Open</button>
-					<button data-target="#basic" onclick="closeDoors(event)">Close</button>
+					<button onclick="openDoors(event, 'basic')">Open</button>
+					<button onclick="closeDoors(event, 'basic')">Close</button>
 				</figcaption>
 			</figure>
+			<wijit-code>
+				<textarea>
+					<sliding-doors active>
+						<p>...</p>
+					</sliding-doors>
+				</textarea>
+			</wijit-code>
 		</article>
 
 		<article>
 			<h3>Activate on Form Submission</h3>
-			<sliding-doors>
-				<form id="example" onsubmit="closeDoors(event)">
+			<sliding-doors id="form">
+				<form id="example" onsubmit="closeDoors(event, 'form')">
 					<label>
 						Foo<br>
 						<input name="foo" value="">
@@ -186,12 +190,22 @@
 
 				<button slot="effect" style="box-shadow:inset 2px 2px 5px gray">Submitting form.<br>Please wait...</button>
 			</sliding-doors>
+			<wijit-code indent="2">
+				<textarea>
+					<sliding-doors>
+						<form onsubmit="closeDoorsAndSubmit()">
+							...
+						</form>
+						<div slot="effect">Submitting form></div>
+					</sliding-doors>
+				</textarea>
+			</wijit-code>
 		</article>
 
 		<article>
 			<h3>With Gradient</h3>
 			<figure>
-				<sliding-doors active id="basic-radial">
+				<sliding-doors active id="basic-grad">
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -201,30 +215,18 @@
 					<div slot="effect" class="basic-gradient"></div>
 				</sliding-doors>
 				<figcaption>
-					<button data-target="#basic-radial" onclick="openDoors(event)">Open</button>
-					<button data-target="#basic-radial" onclick="closeDoors(event)">Close</button>
+					<button onclick="openDoors(event, 'basic-grad')">Open</button>
+					<button onclick="closeDoors(event, 'basic-grad')">Close</button>
 				</figcaption>
 			</figure>
-		</article>
-
-		<article>
-			<h3>With Complex Gradient</h3>
-			<figure>
-				<sliding-doors id="rad-grad" active >
-					<div class="content">
-						<rad-grad02 style="height:600px"></rad-grad02>
-					</div>
-					<rad-grad02 slot="effect"></rad-grad02>
-				</sliding-doors>
-				<figcaption>
-					<button data-target="#rad-grad" onclick="closeDoors(event)">
-						Close
-					</button>
-					<button data-target="#rad-grad" onclick="openDoors(event)">
-						Open
-					</button>
-				</figcaption>
-			</figure>
+			<wijit-code>
+				<textarea>
+					<sliding-doors active>
+						<p>...</p>
+						<div slot="effect" class="some-gradient"></div>
+					</sliding-doors>
+				</textarea>
+			</wijit-code>
 		</article>
 
 		<article>
@@ -234,7 +236,7 @@
 					<div class="content">
 						<h1>Foo!</h1>
 					</div>
-					<svg slot="effect" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+					<svg slot="effect" class="animate" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 						<circle cx="12" cy="12" r="10" stroke-width="3" fill="none" />
 						<line x1="12" y1="2" x2="12" y2="6" stroke-width="3" />
 						<line x1="12" y1="18" x2="12" y2="22" stroke-width="3" />
@@ -243,14 +245,56 @@
 					</svg>
 				</sliding-doors>
 				<figcaption>
-					<button data-target="#ani-icon" onclick="closeDoors(event)">
-						Close
-					</button>
-					<button data-target="#ani-icon" onclick="openDoors(event)">
+					<button onclick="openDoors(event, 'ani-icon')">
 						Open
+					</button>
+					<button onclick="closeDoors(event, 'ani-icon')">
+						Close
 					</button>
 				</figcaption>
 			</figure>
+			<wijit-code indent='2'>
+				<textarea>
+					<sliding-doors active>
+						<div>...</div>
+						<svg slot="effect" class="animate">...</svg>
+					</sliding-doors>
+				</textarea>
+			</wijit-code>
+		</article>
+
+		<article>
+			<h3>With Image</h3>
+			<figure>
+				<sliding-doors active id="with-image">
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<img
+					slot="effect"
+					src="https://api.dicebear.com/7.x/adventurer/svg?seed=Salem"
+					alt="avatar" />
+				</sliding-doors>
+				<figcaption>
+					<button onclick="openDoors(event, 'with-image')">
+						Open
+					</button>
+					<button onclick="closeDoors(event, 'with-image')">
+						Close
+					</button>
+				</figcaption>
+			</figure>
+			<wijit-code>
+				<textarea>
+					<sliding-doors active>
+						<div>...</div>
+						<img slot="effect" src="...">
+					</sliding-doors>
+				</textarea>
+			</wijit-code>
 		</article>
 	</section>
 
@@ -258,22 +302,9 @@
 		const elems = document.querySelectorAll ('sliding-doors');
 		const form = document.querySelector('form#settings');
 
-		function getElement (event) {
-			let elem;
-			const target = event.target.getAttribute ('data-target') || false;
-
-			if (target) {
-				elem = document.querySelector (target);
-			} else {
-				elem = event.target.closest ('sliding-doors');
-			}
-
-			return elem;
-		}
-
-		function closeDoors (event) {
+		function closeDoors (event, target) {
 			event.preventDefault();
-			const elem = getElement(event);
+			const elem = document.getElementById(target);
 			elem.setAttribute ('active', '');
 
 			// This is just to simulate submitting a form and waiting for a response. Do not include this on your page.
@@ -285,21 +316,22 @@
 					delay = speed[1] + 2000;
 					break;
 				default:
-					delay = speed[1] * 1000 + 2000;
+					delay = speed[1] * 1000 + 1000;
 					break;
 				}
 
 				setTimeout (() => {
 					event.target.reset();
 					event.target.elements[0].focus();
-					openDoors(event);
+					openDoors(event, target);
 				}, delay);
 			}
 		}
 
-		function openDoors (event) {
+		function openDoors (event, target) {
 			event.preventDefault();
-			getElement(event).removeAttribute ('active');
+			document.getElementById( target )
+				.removeAttribute( 'active' );
 		}
 
 		function change (event, attr) {

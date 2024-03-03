@@ -1,28 +1,23 @@
 :root {
-	--bg1: rgb(235,235,235);
-	--bg2: rgb(215,215,215);
-	--bg3: white;
-	--border: silver;
-	--text: rgb(40,40,40);
-	--selected: lightgray ;
-    --fail: hsl(6, 93%, 80%);
-    --pass: hsl(112, 70%, 75%);
-    --primary: dodgerblue;
-    --secondary: aliceblue ;
+	--accent-color: orange;
+	--bg1-color: rgb(235,235,235);
+	--bg2-color: rgb(215,215,215);
+	--bg3-color: white;
+	--border-color: silver;
+	--text-color: rgb(40,40,40);
 
 	@media (prefers-color-scheme: dark) {
-        --text: rgb(240,240,240);
-        --bg1: rgb(20,20,20);
-        --bg2: rgb(40,40,40);
-        --bg3: rgb(60,60,60);
-        --border: dimgray;
-        --primary: none;
+        --bg1-color: rgb(20,20,20);
+        --bg2-color: rgb(40,40,40);
+        --bg3-color: rgb(60,60,60);
+        --border-color: dimgray;
+        --text-color: rgb(240,240,240);
     }
 }
 
 html, body {
-    background: var(--bg1);
-    color: var(--text);
+    background: var(--bg1-color);
+    color: var(--text-color);
 	font-family: sans-serif;
 	font-size: 18px;
 	letter-spacing: .1rem;
@@ -35,7 +30,7 @@ body *
 
 article
 {
-	background-color: var(--bg2);
+	background-color: var(--bg2-color);
 	flex: 1 0 400px;
 	min-width: 400px;
 	padding: 10px;
@@ -44,7 +39,7 @@ article
 button,
 input
 {
-	border: 1px solid var(--border);
+	border: 1px solid var(--border-color);
 	border-radius: 10px;
 	font-size: 1rem;
 	min-height: 35px;
@@ -60,7 +55,10 @@ summary
 
 button:hover,
 summary:hover
-{ box-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+{
+	background-color: var(--accent-color);
+	box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
 
 button:active,
 summary:active
@@ -76,7 +74,7 @@ details
 
 details > *
 {
-	background: var(--bg2);
+	background: var(--bg2-color);
 	border-radius: 20px;
 	margin: 1rem 0;
 	padding: 1rem;
@@ -84,7 +82,7 @@ details > *
 
 fieldset
 {
-	border: 1px solid var(--border);
+	border: 1px solid var(--border-color);
 	border-radius: 10px;
 	display: inline-block;
 }
@@ -96,41 +94,33 @@ fieldset > select,
 fieldset > input
 { width: 100%; }
 
-figure
-{
+figure {
 	border-radius: 10px 10px 0 0;
 	text-align: center;
 }
 
-figcaption
-{
+figcaption {
 	align-items: stretch;
 	border-radius: 0 0 10px 10px;
 	display: flex;
 }
 
 figcaption > *
-{
-	flex: 1;
-}
+{ flex: 1; }
 
-figcaption > button:first-child {
-	border-radius: 0 0 0 10px;
-}
+figcaption > button:first-child
+{ border-radius: 0 0 0 10px; }
 
-figcaption > button:last-child {
-	border-radius: 0 0 10px 0;
-}
+figcaption > button:last-child
+{ border-radius: 0 0 10px 0; }
 
-form#example
-{
+form#example {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-h1
-{
+h1 {
 	display: inline-block;
 	margin: 0;
 	vertical-align: middle;
@@ -141,23 +131,23 @@ h3
 { margin: 1rem; }
 
 input,
-select
-{
-	border: 1px solid var(--border);
+select {
+	accent-color: var(--accent-color);
+	background-color: var(--bg3-color);
+	border: 1px solid var(--border-color);
 	border-radius: 5px;
+	color: var(--text-color);
 	min-height: 35px;
 	min-width: 35px;
 }
 
-label
-{
+label {
 	cursor: pointer;
 	display: inline-block;
 	margin: .5rem 0;
 }
 
-label[required]:after
-{
+label[required]:after {
 	content: "*";
 	color: var(--error);
 	font-size: 1.25rem;
@@ -171,12 +161,9 @@ li
 { margin-bottom: 1rem; }
 
 option
-{
-	font-size: 1.2rem;
-}
+{ font-size: 1.2rem; }
 
-section
-{
+section {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: stretch;
@@ -184,10 +171,17 @@ section
 	margin: 10px;
 }
 
-ul, ol
-{
+ul, ol {
 	margin: 1rem;
 	padding: 1rem;
+}
+
+wijit-code {
+	width: 100%;
+	background-color: var(--bg3-color);
+	border: 1px solid var(--border-color);
+	border-radius: 10px;
+	white-space: wrap;
 }
 
 @layer settings {
@@ -201,6 +195,13 @@ ul, ol
 
 	#settings > *
 	{ flex: 1; }
+}
+
+.sticky {
+	background-color: var(--bg1-color);
+	position: sticky;
+	top: 0;
+	z-index: 4;
 }
 
 .success

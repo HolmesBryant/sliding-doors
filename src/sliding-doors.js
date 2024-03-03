@@ -1,8 +1,47 @@
+/**
+ * @class SlidingDoors
+ * @extends HTMLElement
+ * @description A custom element that renders a sliding doors effect
+ * Changes appearance dynamically based on attributes.
+ *
+ * @example
+ * ```html
+ * <sliding-doors active speed="1s" theme="dark"></sliding-doors>
+ *
+ *  @author Holmes Bryant <https://github.com/HolmesBryant>
+ *  @license GPL-3.0
+*/
 export default class SlidingDoors extends HTMLElement {
+	/**
+	 * @private
+	 * @type {boolean}
+	 */
 	#active = false;
+
+	/**
+	 * @private
+	 * @type {string}
+	 */
 	#speed = '.5s';
+
+	/**
+	 * @private
+	 * @type {string}
+	 */
 	#theme = 'auto';
+
+	/**
+	 * @public
+	 * @type {HTMLElement}
+	 * @description Container element for internal components.
+	 */
 	container;
+
+	/**
+	 * @public
+	 * @type {object}
+	 * @description Predefined themes for the component.
+	 */
 	themes = {
 		default: {
 			tintOuter: 'dimgray',
@@ -21,9 +60,24 @@ export default class SlidingDoors extends HTMLElement {
 		},
 		auto: {}
 	};
+
+	/**
+	 * @public
+	 * @type {HTMLElement}
+	 * @description Wrapper element for the sliding doors effect.
+	 */
 	wrapper;
+
+	/**
+	 * @static
+	 * @type {string[]}
+	 * @description List of observed attributes for the component.
+	 */
 	static observedAttributes = ['active', 'speed', 'theme'];
 
+	/**
+	 * @constructor
+	 */
 	constructor() {
 		super();
 		this.attachShadow({mode:'open'});
@@ -32,7 +86,6 @@ export default class SlidingDoors extends HTMLElement {
 				:host {
 					border-radius: inherit;
 					display: inline-block;
-					opacity: 0;
 					overflow: hidden;
 					--speed: ${this.speed};
 					--tintOuter: ${this.themes.default.tintOuter};
@@ -182,26 +235,52 @@ export default class SlidingDoors extends HTMLElement {
 		this.container = this.shadowRoot.querySelector('#container');
 	}
 
+	/**
+	 * @callback attributeChangedCallback
+	 * @param {string} attr - The attribute name that changed.
+	 * @param {string} oldval - The old value of the attribute.
+	 * @param {string} newval - The new value of the attribute.
+	 * @description Called when an observed attribute is changed.
+	 */
 	attributeChangedCallback(attr, oldval, newval) {
 		this[attr] = newval;
 	}
 
+	/**
+	 * @callback connectedCallback
+	 * @description Called when the component is inserted into the DOM.
+	 *
+	 * - Sets up the sliding doors effect.
+	 * - Handles initial visibility and transitions based on the `active` state.
+	 * - Adds event listeners to manage shadow classes during transitions.
+	 */
 	connectedCallback() {
-		const elem = this.querySelector('*[slot=effect]');
-		this.setEffect(elem);
-		this.style.opacity = '1';
+		const elem = this.querySelector( '*[slot=effect]' );
+		this.setEffect( elem );
 
-		if (this.active) this.container.classList.add('shadow');
+		if (this.active) this.container.classList.add( 'shadow' );
 
-		this.container.addEventListener('transitionstart', () => {
-			if (this.active) this.container.classList.add('shadow');
+		this.container.addEventListener( 'transitionstart', () => {
+			if( this.active ) this.container.classList.add( 'shadow' );
 		});
 
-		this.container.addEventListener('transitionend', () => {
-			if (!this.active) this.container.classList.remove('shadow');
+		this.container.addEventListener( 'transitionend', () => {
+			if( !this.active ) this.container.classList.remove( 'shadow' );
 		});
 	}
 
+	/**
+	 * @private
+	 * @param {HTMLElement} elem - The element to apply the effect to.
+	 * @description Sets up the visual effect for the sliding doors by cloning the provided element
+	 * and positioning the clones as left and right halves.
+	 *
+	 * @test
+		const elem = document.createElement('span');
+		const tagname = elem.localName;
+		self.setEffect( elem );
+		return self.querySelectorAll( tagname ).length; // 2
+	 */
 	setEffect(elem) {
 		if (!elem) return;
 		const clone = elem.cloneNode(true);
@@ -211,16 +290,32 @@ export default class SlidingDoors extends HTMLElement {
 	}
 
 	get active () { return this.#active; }
+
+	/**
+	 * @setter
+	 * @param {boolean} value - The new value for the active property.
+	 * @description Sets the active state of the sliding doors.
+	 *
+	 * - Accepts empty string, "true", or falsey values for `value`.
+	 * - Toggles the `active` class on the wrapper element to control the visual state.
+	 *
+	 * @test self.active = false; return self.active; // false
+	 * @test self.active = true; return self.active; // true
+	 * @test self.active = 'foo'; return self.active; // true
+	 * @test self.setAttribute('active', 'false'); return self.active; // false
+	 * @test self.setAttribute( 'active', 'true' ); return self.active; // true
+	 */
 	set active (value) {
 		switch (value) {
-		case '':
-		case 'true':
-			value = true;
-			this.wrapper.classList.add('active');
-			break;
-		default:
+		case 'false':
+		case null:
+		case false:
 			value = false;
 			this.wrapper.classList.remove('active');
+			break;
+		default:
+			value = true;
+			this.wrapper.classList.add('active');
 			break;
 		}
 
@@ -228,6 +323,20 @@ export default class SlidingDoors extends HTMLElement {
 	}
 
 	get speed () { return this.#speed; }
+
+	/**
+	 * @setter
+	 * @param {string|number} value - The new value for the speed property.
+	 * @description Sets the transition speed for the sliding doors effect.
+	 *
+	 * - Accepts a number (interpreted as seconds) or a string representing a CSS duration.
+	 * - If a number is provided, automatically appends "s" for seconds.
+	 * - Updates the internal #speed property and sets the `--speed` CSS variable.
+	 *
+	 * @test self.speed = 5; return self.style.getPropertyValue( '--speed' ) // '5s'
+	 * @test self.speed = '50ms'; return self.style.getPropertyValue( '--speed' ) // '50ms'
+	 * @test self.setAttribute('speed', '50ms'); return self.style.getPropertyValue( '--speed' ) // '50ms'
+	 */
 	set speed (value) {
 		// if value is just a number, add 's' for 'seconds';
 		if (!isNaN (value)) value = value + 's';
@@ -236,6 +345,18 @@ export default class SlidingDoors extends HTMLElement {
 	}
 
 	get theme () { return this.#theme; }
+
+	/**
+	 * @setter
+	 * @param {string} value - The new value for the theme property.
+	 * @description Sets the theme for the sliding doors component.
+	 *
+	 * - Valid values are "auto", "light", and "dark".
+	 * - If "auto" is specified, automatically determines the theme based on user's system preference.
+	 * - Updates internal theme state and applies theme-specific colors for tinting effects.
+	 * - Sets corresponding CSS variables for visual adjustments.
+	 * @test self.theme = 'lightg'; return self.tintInner; // 'white 90%'
+	 */
 	set theme (value) {
 		switch (value) {
 		case 'auto':
