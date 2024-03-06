@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="styles.css">
 	<style>
 		sliding-doors {
-			height:275px;
+			height:300px;
 			width: 100%;
 		}
 
@@ -188,7 +188,11 @@
 					<p><button type="submit">Submit</button></p>
 				</form>
 
-				<button slot="effect" style="box-shadow:inset 2px 2px 5px gray">Submitting form.<br>Please wait...</button>
+				<center
+					slot="effect"
+					style="color:black; overflow:hidden">
+					<strong>Submitting Form</strong>
+				</center>
 			</sliding-doors>
 			<wijit-code indent="2">
 				<textarea>
@@ -196,7 +200,9 @@
 						<form onsubmit="closeDoorsAndSubmit()">
 							...
 						</form>
-						<div slot="effect">Submitting form></div>
+						<center slot="effect" style="overflow:hidden">
+							<strong>Submitting Form</strong>
+						</center>
 					</sliding-doors>
 				</textarea>
 			</wijit-code>
@@ -287,6 +293,9 @@
 					</button>
 				</figcaption>
 			</figure>
+			<center>
+				<small><a href="https://www.dicebear.com/" target="_blank">Image courtesy of DiceBear</a></small>
+			</center>
 			<wijit-code>
 				<textarea>
 					<sliding-doors active>

@@ -84,18 +84,21 @@ export default class SlidingDoors extends HTMLElement {
 		this.shadowRoot.innerHTML = `
 			<style>
 				:host {
-					border-radius: inherit;
-					display: inline-block;
-					overflow: hidden;
 					--speed: ${this.speed};
 					--tintOuter: ${this.themes.default.tintOuter};
 					--tintMiddle: ${this.themes.default.tintMiddle};
 					--tintInner: ${this.themes.default.tintInner};
+
+					border-radius: inherit;
+					display: inline-block;
+					overflow: hidden;
 					transition: all .5s;
+					height: 100%;
 				}
 
 				::slotted(*) {
 					height: 100%;
+					overflow: auto;
 				}
 
 				@keyframes close {
@@ -106,120 +109,114 @@ export default class SlidingDoors extends HTMLElement {
 					100% { z-index: -1 }
 				}
 
-				@layer container {
-					#container {
-						height: 100%;
-						position: relative;
-					}
-
-					#container::before,
-					#container::after {
-						border-width: 1px;
-						border-style: solid;
-						border-color: silver;
-						content: '';
-						position: absolute;
-						bottom: 0;
-						top: 0;
-						z-index: 1;
-					}
-
-					#container.shadow::before,
-					#container.shadow::after {
-						box-shadow: 5px 5px 10px rgb(40,40,40);
-					}
-
-					#container.shadow::before {
-						border-width: 1px 0 1px 1px;
-					}
-
-					#container.shadow::after {
-						border-width: 1px 1px 1px 0;
-					}
-
-					#container::before {
-						background-color: var(--tintOuter);
-						background-image: linear-gradient(
-							to right,
-							var(--tintOuter),
-							var(--tintMiddle),
-							var(--tintInner)
-						);
-						border-width: 0;
-						left: 0;
-						right: 100%;
-						transition: right var(--speed) ease-in;
-					}
-
-					#container::after {
-						background-image: linear-gradient(
-							to left,
-							var(--tintOuter),
-							var(--tintMiddle),
-							var(--tintInner)
-						);
-						border-width: 0;
-						left: 100%;
-						right: 0;
-						transition: left var(--speed) ease-in;
-					}
-				} /* @container */
-
-
-				@layer effect {
-					#effectLeft,
-					#effectRight {
-						aspect-ratio: 1/1;
-						display: flex;
-						flex-direction: column;
-						justify-content: center;
-						content: '';
-						position: absolute;
-						top: 50%;
-						transition: all var(--speed) ease-in;
-						z-index: 1;
-					}
-
-					#effectLeft {
-						left: 0;
-						right: 100%;
-						transform: translateY(-50%) translateX(50%);
-						-webkit-mask-image: linear-gradient( to right, white 50%, transparent 51% );
-						mask-image: linear-gradient( to right, white 50%, transparent 51% );
-					}
-
-					#effectRight {
-						left: 100%;
-						right: 0;
-						transform: translateY(-50%) translateX(-50%);
-						-webkit-mask-image: linear-gradient( to left, white 50%, transparent 50% );
-						mask-image: linear-gradient( to left, white 50%, transparent 50% );
-					}
-				} /* @effect */
-
-				@layer wrapper {
-					#wrapper {
-						height: 100%;
-						position: relative;
-					}
-
-					#wrapper.active #effectLeft,
-					#wrapper.active #container::before {
-						right: 50%;
-					}
-
-					#wrapper.active #effectRight,
-					#wrapper.active #container::after {
-						left: 50%;
-					}
-				} /* @wrapper */
-
-				#scrollable {
-					overflow: auto;
-					padding-right: 16px;
+				#container {
+					height: 100%;
+					position: relative;
 				}
 
+				#container::before,
+				#container::after {
+					border-width: 1px;
+					border-style: solid;
+					border-color: silver;
+					content: '';
+					position: absolute;
+					bottom: 0;
+					top: 0;
+					z-index: 1;
+				}
+
+				#container.shadow::before,
+				#container.shadow::after {
+					box-shadow: 5px 5px 10px rgb(40,40,40);
+				}
+
+				#container.shadow::before {
+					border-width: 1px 0 1px 1px;
+				}
+
+				#container.shadow::after {
+					border-width: 1px 1px 1px 0;
+				}
+
+				#container::before {
+					background-color: var(--tintOuter);
+					background-image: linear-gradient(
+						to right,
+						var(--tintOuter),
+						var(--tintMiddle),
+						var(--tintInner)
+					);
+					border-width: 0;
+					left: 0;
+					right: 100%;
+					transition: right var(--speed) ease-in;
+				}
+
+				#container::after {
+					background-image: linear-gradient(
+						to left,
+						var(--tintOuter),
+						var(--tintMiddle),
+						var(--tintInner)
+					);
+					border-width: 0;
+					left: 100%;
+					right: 0;
+					transition: left var(--speed) ease-in;
+				}
+
+				#effectLeft,
+				#effectRight {
+					aspect-ratio: 1/1;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					content: '';
+					position: absolute;
+					top: 50%;
+					transition: all var(--speed) ease-in;
+					z-index: 1;
+				}
+
+				#effectLeft {
+					left: 0;
+					right: 100%;
+					transform: translateY(-50%) translateX(50%);
+					-webkit-mask-image: linear-gradient( to right, white 50%, transparent 51% );
+					mask-image: linear-gradient( to right, white 50%, transparent 51% );
+				}
+
+				#effectRight {
+					left: 100%;
+					right: 0;
+					transform: translateY(-50%) translateX(-50%);
+					-webkit-mask-image: linear-gradient( to left, white 50%, transparent 50% );
+					mask-image: linear-gradient( to left, white 50%, transparent 50% );
+				}
+
+				#wrapper {
+					height: 100%;
+					position: relative;
+				}
+
+				#wrapper.active #effectLeft,
+				#wrapper.active #container::before {
+					right: 50%;
+				}
+
+				#wrapper.active #effectRight,
+				#wrapper.active #container::after {
+					left: 50%;
+				}
+
+				#scrollable {
+					height: inherit;
+
+					padding-right: 16px;
+				}
 			</style>
+
 			<div id="wrapper" part="wrapper">
 				<div id="container" part="container">
 					<div id="scrollable">
