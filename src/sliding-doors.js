@@ -212,8 +212,7 @@ export default class SlidingDoors extends HTMLElement {
 
 				#scrollable {
 					height: inherit;
-
-					padding-right: 16px;
+					scrollbar-gutter: stable both-edges;
 				}
 			</style>
 
