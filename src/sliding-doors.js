@@ -11,7 +11,7 @@
  *  @author Holmes Bryant <https://github.com/HolmesBryant>
  *  @license GPL-3.0
 */
-export default class SlidingDoors extends HTMLElement {
+export class SlidingDoors extends HTMLElement {
 	/**
 	 * @private
 	 * @type {boolean}
@@ -383,4 +383,8 @@ export default class SlidingDoors extends HTMLElement {
 	}
 }
 
-document.addEventListener('DOMContentLoaded', customElements.define('sliding-doors', SlidingDoors));
+document.addEventListener('DOMContentLoaded', () => {
+	if (!customElements.get('sliding-doors')) {
+		customElements.define('sliding-doors', SlidingDoors)
+	}
+});
